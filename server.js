@@ -9,6 +9,7 @@ const path = require('path');
 
 const Driver = require('./models/Driver');
 const Passenger = require('./models/Passenger');
+const createMapsRoutes = require('./routes/maps');
 
 const app = express();
 const server = http.createServer(app);
@@ -22,6 +23,11 @@ const io = socketIo(server, {
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../admin-web')));
+
+// FASE 7F.8A: proxy de Google Maps. Se monta sobre el servidor existente sin
+// alterar ninguna ruta ni lógica previa. La clave de Google permanece en el
+// servidor (GOOGLE_MAPS_SERVER_KEY).
+app.use('/api/maps', createMapsRoutes());
 
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('✅ Conectado a MongoDB'))
